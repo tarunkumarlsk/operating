@@ -1,0 +1,33 @@
+#include <stdio.h>
+#define NUM_PARTITIONS 6
+int main() {
+    int partitions[NUM_PARTITIONS] = { 300, 600, 350, 200, 750, 125 };
+    int num_processes = 5;
+    int processes[] = { 115, 500, 358, 200, 375 };
+    int i, j, best_fit, best_fit_index;
+    printf("Memory partitions: ");
+    for (i = 0; i < NUM_PARTITIONS; i++) {
+        printf("%d KB ", partitions[i]);
+    }
+    printf("\n");
+    for (i = 0; i < num_processes; i++) {
+        best_fit = -1;
+        best_fit_index = -1;
+        for (j = 0; j < NUM_PARTITIONS; j++) {
+            if (partitions[j] >= processes[i]) {
+                if (best_fit == -1 || partitions[j] < best_fit) {
+                    best_fit = partitions[j];
+                    best_fit_index = j;
+                }
+            }
+        }
+        if (best_fit_index != -1) {
+            printf("Process %d with size %d KB is allocated to partition %d with size %d KB.\n",
+                   i + 1, processes[i], best_fit_index + 1, partitions[best_fit_index]);
+            partitions[best_fit_index] -= processes[i];
+        } else {
+            printf("Process %d with size %d KB cannot be allocated.\n", i + 1, processes[i]);
+        }
+    }
+    return 0;
+}
