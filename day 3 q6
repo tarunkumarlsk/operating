@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define MAX_REQUESTS 1000
+int main() {
+    int head_position, num_requests, requests[MAX_REQUESTS];
+    int i, total_distance = 0;
+    printf("Enter the number of disk requests: ");
+    scanf("%d", &num_requests);
+    printf("Enter the requests: ");
+    for (i = 0; i < num_requests; i++) {
+        scanf("%d", &requests[i]);
+    }
+    printf("Enter the initial head position: ");
+    scanf("%d", &head_position);
+    printf("The request queue is: ");
+    for (i = 0; i < num_requests; i++) {
+        printf("%d ", requests[i]);
+    }
+    printf("\n");
+    printf("The head position is: %d\n", head_position);
+    for (i = 0; i < num_requests; i++) {
+        int distance = abs(requests[i] - head_position);
+        total_distance += distance;
+        head_position = requests[i];
+    }
+    printf("The total head movement is: %d\n", total_distance);
+    printf("The average head movement is: %.2f\n", (float) total_distance / num_requests);
+    return 0;
+}
