@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdbool.h>
+#define MAX_PAGES 100
+int main() {
+    int page_faults = 0;
+    int pages[MAX_PAGES] = {4, 3, 2, 1, 4, 3, 5, 4, 3, 2, 1, 5};
+    int num_pages = sizeof(pages) / sizeof(int);
+    int capacity = 3;
+    int frames[capacity];
+    bool used[capacity];
+    int future_distance[capacity];
+    int i, j, k, min_distance, replace_page;
+    for (i = 0; i < capacity; i++) {
+        frames[i] = -1;
+        used[i] = false;
+        future_distance[i] = -1;
+    }
+    for (i = 0; i < num_pages; i++) {
+        int page = pages[i];
+        bool page_found = false;
+        for (j = 0; j < capacity; j++) {
+            if (frames[j] == page) {
+                page_found = true;
+                break;
+            }
+        }
+        if (!page_found) {
+            if (page_faults < capacity) {
+                frames[page_faults] = page;
+                page_faults++;
+            } else {
+                for (j = 0; j < capacity; j++) {
+                    future_distance[j] = -1;
+                    for (k = i + 1; k < num_pages; k++) {
+                        if (pages[k] == frames[j]) {
+                            future_distance[j] = k - i;
+                            break;
+                        }
+                    }
+                }
+                min_distance = future_distance[0];
+                replace_page = 0;
+                for (j = 1; j < capacity; j++) {
+                    if (future_distance[j] == -1) {
+                        replace_page = j;
+                        break;
+                    } else if (future_distance[j] > min_distance) {
+                        min_distance = future_distance[j];
+                        replace_page = j;
+                    }
+                }
+                frames[replace_page] = page;
+            }
+        }
+        printf("Page %d: ", page);
+        for (j = 0; j < capacity; j++) {
+            if (frames[j] == -1) {
+                printf("[ ] ");
+            } else {
+                printf("[%d] ", frames[j]);
+            }
+        }
+        printf("\n");
+    }
+    printf("Number of page faults: %d\n", page_faults);
+    return 0;
+}
