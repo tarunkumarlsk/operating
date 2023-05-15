@@ -1,0 +1,46 @@
+Sure, here's the C program to calculate average turnaround time and average waiting time using the FCFS scheduling algorithm for the given set of processes and their respective burst times:
+
+c
+#include<stdio.h>
+
+int main()
+{
+    int n = 4;  // Number of processes
+    int burst_time[] = {9, 6, 5, 4};  // Burst time for each process
+    int arrival_time[] = {0, 0, 0, 0};  // Arrival time for each process (assumed to be 0 for simplicity)
+    int completion_time[n], waiting_time[n], turnaround_time[n];
+    int total_waiting_time = 0, total_turnaround_time = 0;
+
+    completion_time[0] = burst_time[0];  // The first process completes at its own burst time
+    waiting_time[0] = 0;  // The first process has no waiting time
+    turnaround_time[0] = burst_time[0];  // The first process has the same turnaround time as its burst time
+
+    // Calculate the completion time, waiting time and turnaround time for each job
+    for (int i = 1; i < n; i++)
+    {
+        completion_time[i] = completion_time[i-1] + burst_time[i];
+        waiting_time[i] = completion_time[i-1] - arrival_time[i];
+        turnaround_time[i] = completion_time[i] - arrival_time[i];
+
+        total_waiting_time += waiting_time[i];
+        total_turnaround_time += turnaround_time[i];
+    }
+
+    // Print the completion time, waiting time and turnaround time for each job
+    printf("Process\tBurst Time\tArrival Time\tCompletion Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("P%d\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i+1, burst_time[i], arrival_time[i], completion_time[i], waiting_time[i], turnaround_time[i]);
+    }
+
+    // Calculate and print the average waiting time and average turnaround time
+    float avg_waiting_time = (float)total_waiting_time / n;
+    float avg_turnaround_time = (float)total_turnaround_time / n;
+    printf("Average Waiting Time: %.2f\n", avg_waiting_time);
+    printf("Average Turnaround Time: %.2f\n", avg_turnaround_time);
+
+    return 0;
+}
+
+
+Note: The above code assumes that the arrival time for each process is 0 for simplicity. If the arrival times are different, then the completion time, waiting time and turnaround time for each job should be calculated accordingly.
